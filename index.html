@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>analisis_algoritmos</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+     <div class="min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-cyan-50">
+      <div class="container mx-auto px-4 py-12">
+        <header class="text-center mb-2">
+          <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
+            CodecTool
+          </h1>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Codifica y decodifica números de matriculas de forma segura
+          </p>
+          </header>
+          </div>
+        
+   <div class="w-full max-w-2xl mx-auto">
+
+  <!-- 🔹 SOLO esta parte se reemplaza dinámicamente -->
+  <div id="file-area">
+    <label id="drop-area"
+      class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 border-gray-300 hover:border-cyan-500 hover:bg-cyan-50/50"
+    >
+      <div class="flex flex-col items-center justify-center pt-5 pb-6">
+        <svg id="upload-icon" class="w-12 h-12 mb-4 text-gray-400 transition-colors" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M16 12l-4-4m0 0l-4 4m4-4v12" />
+        </svg>
+
+        <p class="mb-2 text-sm font-semibold text-gray-900">
+          <span>Haz clic para seleccionar</span> o arrastra un archivo
+        </p>
+        <p class="text-xs text-gray-500">Solo archivos de texto</p>
+      </div>
+
+      <input type="file" id="file-input" accept=".txt" class="hidden" aria-label="Seleccionar archivo">
+    </label>
+  </div>
+  <!-- 🔹 FIN DEL ÁREA REEMPLAZABLE -->
+
+  <!-- 🔸 Tus botones SIEMPRE deben quedar fuera -->
+  <div class="flex gap-4 w-full max-w-2xl mx-auto mt-6">
+    <button
+      id="btn-encode"
+      class="flex-1 h-14 text-base flex items-center justify-center gap-2 bg-cyan-500 text-white font-semibold rounded-lg hover:bg-cyan-600 transition disabled:opacity-50"
+      disabled>
+      Codificar
+    </button>
+
+    <button
+      id="btn-decode"
+      class="flex-1 h-14 text-base flex items-center justify-center gap-2 border-2 border-gray-300 rounded-lg font-semibold text-gray-700 hover:border-cyan-500 hover:text-cyan-600 transition disabled:opacity-50"
+      disabled>
+      Decodificar
+    </button>
+  </div>
+
+</div>
+
+        </div>
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>

@@ -47,10 +47,14 @@ function actualizarArchivo(){
     `;
 
     document.getElementById("clear-file").addEventListener("click", resetFileLoader);
-    activarBoton(btnCodificar);
+    if(!archivo.name.includes("codificado")){
+        activarBoton(btnCodificar);
+    }
+    else{
+        activarBoton(btnDecodificar);
+    }
+    
 }
-
-
 
 function resetFileLoader() {
     fileArea.innerHTML = `
@@ -99,4 +103,5 @@ function activarBoton(boton){
     boton.classList.remove("opacity-50");
 }
 
-btnCodificar.addEventListener("click", () => alert("hola"));
+btnCodificar.addEventListener("click", () => alert("codificado"));
+btnDecodificar.addEventListener("click", () => alert("decodificado"));

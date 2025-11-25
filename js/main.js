@@ -47,11 +47,15 @@ function actualizarArchivo(){
     `;
 
     document.getElementById("clear-file").addEventListener("click", resetFileLoader);
-    if(!archivo.name.includes("codificado")){
+    const nombre = archivo.name.toLowerCase();
+    if(nombre.includes("decodificado")){
         activarBoton(btnCodificar);
     }
-    else{
+    else if(nombre.includes("codificado")) {
         activarBoton(btnDecodificar);
+    }
+    else{
+        activarBoton(btnCodificar);
     }
     
 }

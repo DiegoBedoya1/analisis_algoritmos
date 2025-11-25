@@ -1,25 +1,83 @@
 "use strict";
 
+/* ================================
+   🔹 REFERENCIAS A ELEMENTOS
+================================ */
 let fileInput = document.getElementById("file-input");
 let fileArea = document.getElementById("file-area");
 let dropArea = document.getElementById("drop-area");
 const btnCodificar = document.getElementById("btn-encode");
 const btnDecodificar = document.getElementById("btn-decode");
 
-fileInput.addEventListener("change",actualizarArchivo);
-dropArea.addEventListener("dragover",(event) => event.preventDefault());
-dropArea.addEventListener("drop", (event) => {
+
+/* ================================
+    INICIALIZACIÓN
+================================ */
+inicializarEventos();
+desactivarBoton(btnCodificar);
+desactivarBoton(btnDecodificar);
+
+btnCodificar.addEventListener("click", () => alert("codificado"));
+btnDecodificar.addEventListener("click", () => alert("decodificado"));
+/* ================================
+    REGISTRO DE EVENTOS
+================================ */
+function inicializarEventos() {
+    fileInput.addEventListener("change", actualizarArchivo);
+
+    dropArea.addEventListener("dragover", (event) => event.preventDefault());
+    dropArea.addEventListener("drop", manejarDrop);
+}
+
+
+/* ================================
+   MANEJADORES
+================================ */
+function manejarDrop(event) {
     event.preventDefault();
     fileInput.files = event.dataTransfer.files;
     actualizarArchivo();
-});
+}
 
-
-function actualizarArchivo(){
+function actualizarArchivo() {
     const archivo = fileInput.files[0];
-    if(!archivo){
-        return;
+    if (!archivo) return;
+
+    if(!archivo.name.toLowerCase().endsWith(".txt")){
+      alert("solo se admiten archivos con extensión .txt");
+      return;
+  }
+
+    mostrarArchivo(archivo);
+    configurarBotonesPorNombre(archivo.name.toLowerCase());
+}
+
+
+/* ================================
+    LOGICA DE BOTONES
+================================ */
+function configurarBotonesPorNombre(nombre) {
+
+    if (nombre.includes("decodificado")) {
+        activarBoton(btnCodificar);
+        desactivarBoton(btnDecodificar);
     }
+    else if (nombre.includes("codificado")) {
+        activarBoton(btnDecodificar);
+        desactivarBoton(btnCodificar);
+    }
+    else {
+        // Archivos "normales"
+        activarBoton(btnCodificar);
+        desactivarBoton(btnDecodificar);
+    }
+}
+
+
+/* ================================
+    UI: MOSTRAR ARCHIVO
+================================ */
+function mostrarArchivo(archivo) {
     fileArea.innerHTML = `
       <div class="flex items-center justify-between w-full p-6 border-2 border-cyan-500 bg-cyan-50/30 rounded-xl">
         <div class="flex items-center gap-4">
@@ -47,19 +105,12 @@ function actualizarArchivo(){
     `;
 
     document.getElementById("clear-file").addEventListener("click", resetFileLoader);
-    const nombre = archivo.name.toLowerCase();
-    if(nombre.includes("decodificado")){
-        activarBoton(btnCodificar);
-    }
-    else if(nombre.includes("codificado")) {
-        activarBoton(btnDecodificar);
-    }
-    else{
-        activarBoton(btnCodificar);
-    }
-    
 }
 
+
+/* ================================
+    RESETEAR
+================================ */
 function resetFileLoader() {
     fileArea.innerHTML = `
       <label id="drop-area"
@@ -80,32 +131,29 @@ function resetFileLoader() {
         <input type="file" id="file-input" accept=".txt" class="hidden">
       </label>
     `;
-     fileInput = document.getElementById("file-input");
-     fileInput.value = "";
-     fileInput.addEventListener("change", actualizarArchivo);
-     dropArea = document.getElementById("drop-area");
 
-    dropArea.addEventListener("dragover", (event) => event.preventDefault());
-    dropArea.addEventListener("drop", (event) => {
-        event.preventDefault();
-        fileInput.files = event.dataTransfer.files;
-        actualizarArchivo();
-    });
+    // Reasignar referencias
+    fileInput = document.getElementById("file-input");
+    dropArea = document.getElementById("drop-area");
+
+    inicializarEventos();
+
     desactivarBoton(btnCodificar);
     desactivarBoton(btnDecodificar);
 }
 
-function desactivarBoton(boton){
+
+/* ================================
+    UTILIDADES
+================================ */
+function desactivarBoton(boton) {
     boton.disabled = true;
     boton.style.pointerEvents = "none";
     boton.classList.add("opacity-50");
 }
 
-function activarBoton(boton){
+function activarBoton(boton) {
     boton.disabled = false;
     boton.style.pointerEvents = "auto";
     boton.classList.remove("opacity-50");
 }
-
-btnCodificar.addEventListener("click", () => alert("codificado"));
-btnDecodificar.addEventListener("click", () => alert("decodificado"));

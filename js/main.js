@@ -1,7 +1,9 @@
 "use strict";
+import {codificar, decodificar, isDigit, isCodified, limpiarNombre} from "./algoritmos.js";
+import {leerArchivo, descargarArchivo} from "./archivos.js";
 
 /* ================================
-   🔹 REFERENCIAS A ELEMENTOS
+    REFERENCIAS A ELEMENTOS
 ================================ */
 let fileInput = document.getElementById("file-input");
 let fileArea = document.getElementById("file-area");
@@ -17,8 +19,8 @@ inicializarEventos();
 desactivarBoton(btnCodificar);
 desactivarBoton(btnDecodificar);
 
-btnCodificar.addEventListener("click", () => alert("codificado"));
-btnDecodificar.addEventListener("click", () => alert("decodificado"));
+btnCodificar.addEventListener("click", procesar);
+btnDecodificar.addEventListener("click", procesar);
 /* ================================
     REGISTRO DE EVENTOS
 ================================ */
@@ -50,6 +52,33 @@ function actualizarArchivo() {
 
     mostrarArchivo(archivo);
     configurarBotonesPorNombre(archivo.name.toLowerCase());
+}
+async function procesar(){
+  try{
+    const archivo = fileInput.files[0];
+    const aleatorio = Math.floor(Math.random() * (100 - 1 + 1)) + 1;
+    const nombreOriginal = archivo.name.replace(/\.txt$/i, "");
+    const lowerOriginal = nombreOriginal.toLowerCase();
+    let nombreBase = limpiarNombre(nombreOriginal).trim();
+    if(lowerOriginal.includes("decodificado")){
+      var contenido = await codificarContenido(archivo);
+      var nuevoNombre = nombreBase + `_codificado${aleatorio}.txt`;
+    }
+    else if(lowerOriginal.includes("codificado")){
+      var contenido = await decodificarContenido(archivo);
+      var nuevoNombre = nombreBase + `_decodificado${aleatorio}.txt`;
+    }
+    else{
+      var contenido = await codificarContenido(archivo);
+      var nuevoNombre = nombreBase + `_codificado${aleatorio}.txt`;
+    }
+    if(!contenido){
+      return;
+    }
+    descargarArchivo(nuevoNombre,contenido);
+  }catch(error){
+    alert("hubo un error al procesar el archivo");
+  }
 }
 
 
@@ -157,3 +186,58 @@ function activarBoton(boton) {
     boton.style.pointerEvents = "auto";
     boton.classList.remove("opacity-50");
 }
+
+async function codificarContenido(archivo){
+  let codificado = [];
+  try{
+    const contenido = await leerArchivo(archivo); //todo el contenido del archivo
+    if(!contenido || contenido.trim() == ""){
+        alert("el archivo está vacio");
+        return undefined;
+    }
+    const arrContenido = contenido.split("\n");
+    for(let linea of arrContenido){
+      if(linea.trim() == ""){
+        codificado.push("linea vacia");
+      }
+      else if(isDigit(linea.trim())){
+        let resultado = codificar(linea.trim());
+        codificado.push(resultado);
+      }
+      else{
+        codificado.push("no fue posible de codificar esta linea");
+      }
+    }
+    return codificado.join("\n");
+  }catch(erorr){
+    alert("hubo un error al leer el archivo");
+  }
+}
+
+async function decodificarContenido(archivo){
+  let decodificado = [];
+  try{
+    const contenido = await leerArchivo(archivo);
+    if(!contenido || contenido.trim() == ""){
+        alert("el archivo está vacio");
+        return undefined;
+    }
+    const arrContenido = contenido.split("\n");
+    for(let linea of arrContenido){
+      if(linea.trim() == ""){
+        decodificado.push("linea vacia");
+      }
+      else if(isCodified(linea.trim())){
+        let resultado = decodificar(linea.trim());
+        decodificado.push(resultado);
+      }
+      else{
+        decodificado.push("no fue posible de decodificar esta linea");
+      }
+    }
+    return decodificado.join("\n");
+  }catch(error){
+    alert("hubo un error al leer el archivo");
+  }
+}
+
